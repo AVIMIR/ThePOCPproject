@@ -3,9 +3,9 @@
 
 
 const int WIDTH = 120;
-const int HEIGHT = 39;
+const int HEIGHT = 38;
 
-const char ALIVE_CELL = '#';
+const char ALIVE_CELL = '@';
 const char DEAD_CELL = '.';
 
 
@@ -120,7 +120,7 @@ void generate_next_board(char current_board[HEIGHT][WIDTH], char next_board[HEIG
 
 void sleep() {
 	int x = 0;
-	for (int i = 0; i < 20000000; i++) {
+	for (int i = 0; i < 50000000; i++) {
 		x++;
 	}
 }
@@ -148,7 +148,7 @@ int main(int argc, char *argv[]) {
 
 	for (int i = 0; i < 100000; i++) {
 		sleep();
-		// system("clear");
+		//system("clear");
 		generate_next_board(current_board, next_board);
 		array_copy(current_board, next_board);
 		display_board(current_board);
