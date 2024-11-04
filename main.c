@@ -2,8 +2,8 @@
 #include <stdlib.h>
 
 
-const int WIDTH = 120;
-const int HEIGHT = 38;
+const int WIDTH = 80;
+const int HEIGHT = 29;
 
 const char ALIVE_CELL = '@';
 const char DEAD_CELL = '.';
@@ -19,7 +19,7 @@ int get_proper_coord(int coord, int limit) {
 }
 
 
-int cell_alive(char board[HEIGHT][WIDTH], int y, int x) {
+int cell_alive(char board[HEIGHT][WIDTH + 1], int y, int x) {
 	int checking_x = get_proper_coord(x, WIDTH);
 	int checking_y = get_proper_coord(y, HEIGHT);
 
@@ -29,7 +29,7 @@ int cell_alive(char board[HEIGHT][WIDTH], int y, int x) {
 }
 
 
-int count_neighbours(char board[HEIGHT][WIDTH], int y, int x) {
+int count_neighbours(char board[HEIGHT][WIDTH + 1], int y, int x) {
 	int neighbours_number = 0;
 
 	for (int i = -1; i < 2; i++) {
@@ -46,7 +46,7 @@ int count_neighbours(char board[HEIGHT][WIDTH], int y, int x) {
 }
 
 
-int cell_survives(char board[HEIGHT][WIDTH], int y, int x) {
+int cell_survives(char board[HEIGHT][WIDTH + 1], int y, int x) {
 	int neighbours_number = count_neighbours(board, y, x);
 
 	if (neighbours_number < 2 || neighbours_number > 3)
@@ -58,45 +58,36 @@ int cell_survives(char board[HEIGHT][WIDTH], int y, int x) {
 }
 
 
-void init_board(char board[HEIGHT][WIDTH]) {
+void initialize_board(char board[HEIGHT][WIDTH + 1]) {
 	for (int i = 0; i < HEIGHT; i++) {
 		for (int j = 0; j < WIDTH; j++) {
 			board[i][j] = DEAD_CELL;
 		}
+
+		board[i][WIDTH] = '\0';
 	}
 }
 
 
-void display_board(char board[HEIGHT][WIDTH]) {
-	char line[WIDTH + 1];
-
+void display_board(char board[HEIGHT][WIDTH + 1]) {
 	for (int i = 0; i < HEIGHT; i++) {
 		if (i < 9)
 			printf(" %d)  ", i + 1);
 		else
 			printf("%d)  ", i + 1);
 
-
-		for (int j = 0; j < WIDTH; j++) {
-			line[j] = board[i][j];
-		}
-		line[WIDTH] = '\0';
-
-		/*
-		for (int j=0;j<WIDTH;j++) {
-		 printf("%c", board[i][j]);
-
-		}
-		*/
-
-		printf("%s\n", line);
-		// printf("\n");
+		printf("%s\n", board[i]);
 	}
-	// printf("------------------------------------------------------------------------------------\n");
 }
 
 
-void array_copy(char ar1[HEIGHT][WIDTH], char ar2[HEIGHT][WIDTH]) {
+void copy_one_dim_array(char array1[WIDTH + 1], char array2[WIDTH + 1]) {
+	for (int i = 0; i < WIDTH; i++) {
+		array1[i] = array2[i];
+	}
+}
+
+void array_copy(char ar1[HEIGHT][WIDTH + 1], char ar2[HEIGHT][WIDTH + 1]) {
 	for (int i = 0; i < HEIGHT; i++) {
 		for (int j = 0; j < WIDTH; j++) {
 			ar1[i][j] = ar2[i][j];
@@ -105,7 +96,7 @@ void array_copy(char ar1[HEIGHT][WIDTH], char ar2[HEIGHT][WIDTH]) {
 }
 
 
-void generate_next_board(char current_board[HEIGHT][WIDTH], char next_board[HEIGHT][WIDTH]) {
+void generate_next_board(char current_board[HEIGHT][WIDTH + 1], char next_board[HEIGHT][WIDTH + 1]) {
 	for (int i = 0; i < HEIGHT; i++) {
 		for (int j = 0; j < WIDTH; j++) {
 			// printf("\nI am okay\n");
@@ -120,18 +111,18 @@ void generate_next_board(char current_board[HEIGHT][WIDTH], char next_board[HEIG
 
 void sleep() {
 	int x = 0;
-	for (int i = 0; i < 50000000; i++) {
+	for (int i = 0; i < 1000000000; i++) {
 		x++;
 	}
 }
 
 int main(int argc, char *argv[]) {
 	/**/
-	char current_board[HEIGHT][WIDTH];
-	char next_board[HEIGHT][WIDTH];
+	char current_board[HEIGHT][WIDTH+1];
+	char next_board[HEIGHT][WIDTH+1];
 
-	init_board(current_board);
-	init_board(next_board);
+	initialize_board(current_board);
+	initialize_board(next_board);
 
 	display_board(current_board);
 	// return 0;
@@ -149,6 +140,7 @@ int main(int argc, char *argv[]) {
 	for (int i = 0; i < 100000; i++) {
 		sleep();
 		//system("clear");
+		//system("cls");
 		generate_next_board(current_board, next_board);
 		array_copy(current_board, next_board);
 		display_board(current_board);
